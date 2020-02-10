@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const graphQlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
 
+const mongoose = require("mongoose");
+
 const app = express();
 
 const events = [];
@@ -60,6 +62,21 @@ app.use(
   })
 );
 
-app.listen(process.env.PORT, () =>
-  console.log(`Started Server: http://localhost:${process.env.PORT}`)
-);
+const uri =
+  "mongodb+srv://" +
+  `${process.env.MONGO_USER}:${process.env.MONGO_PASS}` +
+  `@${process.env.MONGO_CLUSTER_ID}.mongodb.net/${process.env.MONGO_DB_NAME}` +
+  "?retryWrites=true&w=majority";
+
+mongoose
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("Connected to MongoDB Atlas");
+    app.listen(process.env.PORT, () =>
+      console.log(`Started Server at Port ${process.env.PORT}`)
+    );
+  })
+  .catch(err => console.log(err));
