@@ -1,0 +1,30 @@
+{
+  "name": "attend-it",
+  "version": "1.0.0",
+  "description": "Just a demo to learn Full Stack Development.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon -r dotenv/config .",
+    "env": "sync-dotenv"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run env"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YoussefRaafatNasry/attend-it.git"
+  },
+  "author": "YoussefRaafatNasry",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "husky": "^4.2.1",
+    "nodemon": "^2.0.2",
+    "sync-dotenv": "^2.4.0"
+  }
+}
