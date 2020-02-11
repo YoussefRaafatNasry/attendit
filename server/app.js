@@ -13,6 +13,32 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const events = async ids => {
+  try {
+    const result = await Event.find({ _id: { $in: ids } });
+    return result.map(event => ({
+      ...event._doc,
+      _id: event.id,
+      creator: user.bind(this, event._doc.creator)
+    }));
+  } catch (err) {
+    return console.log(err);
+  }
+};
+
+const user = async id => {
+  try {
+    const result = await User.findById(id);
+    return {
+      ...result._doc,
+      _id: result.id,
+      createdEvents: events.bind(this, result._doc.createdEvents)
+    };
+  } catch (err) {
+    return console.log(err);
+  }
+};
+
 app.use(
   "/graphql",
   graphQlHttp({
@@ -63,8 +89,12 @@ app.use(
     rootValue: {
       events: async () => {
         try {
-          const events = await Event.find();
-          return events.map(event => ({ ...event._doc, _id: event.id }));
+          const result = await Event.find();
+          return result.map(event => ({
+            ...event._doc,
+            _id: event.id,
+            creator: user.bind(this, event._doc.creator)
+          }));
         } catch (err) {
           return console.log(err);
         }
@@ -86,7 +116,11 @@ app.use(
           creator.createdEvents.push(event);
           await creator.save();
 
-          return { ...result._doc, _id: event.id };
+          return {
+            ...result._doc,
+            _id: event.id,
+            creator: user.bind(this, result._doc.creator)
+          };
         } catch (err) {
           return console.log(err);
         }
