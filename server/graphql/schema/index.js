@@ -1,10 +1,10 @@
 const { buildSchema } = require("graphql");
 
-const UserSchema = require("./user");
+const AuthSchema = require("./auth");
 const EventSchema = require("./event");
 const BookingSchema = require("./booking");
 
-const schemas = [UserSchema, EventSchema, BookingSchema];
+const schemas = [AuthSchema, EventSchema, BookingSchema];
 
 const rootSchema = `
 ${schemas.map(s => s.typeDef).join("\n")}

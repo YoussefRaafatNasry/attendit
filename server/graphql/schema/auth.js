@@ -4,6 +4,12 @@ type User {
     email: String!
     password: String
     createdEvents: [Event!]
+}
+
+type AuthData {
+  userId: ID!
+  token: String!
+  expiresIn: Int!
 }`;
 
 const inputDef = `
@@ -12,7 +18,9 @@ input UserInput {
     password: String
 }`;
 
-const queries = ``;
+const queries = `
+login(userInput: UserInput): AuthData
+`;
 
 const mutations = `
 createUser(userInput: UserInput): User
