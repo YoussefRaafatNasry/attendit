@@ -1,4 +1,4 @@
-const typeDef = `
+export const typeDef = `
 type User {
     _id: ID!
     email: String!
@@ -12,23 +12,16 @@ type AuthData {
   expiresIn: Int!
 }`;
 
-const inputDef = `
+export const inputDef = `
 input UserInput {
     email: String!
     password: String
 }`;
 
-const queries = `
+export const queries = `
 login(userInput: UserInput): AuthData
 `;
 
-const mutations = `
+export const mutations = `
 createUser(userInput: UserInput): User
 `;
-
-module.exports = {
-  typeDef,
-  inputDef,
-  queries,
-  mutations
-};

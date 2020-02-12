@@ -1,4 +1,4 @@
-const typeDef = `
+export const typeDef = `
 type Event {
     _id: ID!
     title: String!
@@ -8,7 +8,7 @@ type Event {
     creator: User!
 }`;
 
-const inputDef = `
+export const inputDef = `
 input EventInput {
     title: String!
     description: String!
@@ -16,17 +16,10 @@ input EventInput {
     date: String!
 }`;
 
-const queries = `
+export const queries = `
 events: [Event!]!
 `;
 
-const mutations = `
+export const mutations = `
 createEvent(eventInput: EventInput): Event
 `;
-
-module.exports = {
-  typeDef,
-  inputDef,
-  queries,
-  mutations
-};

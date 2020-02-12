@@ -1,12 +1,10 @@
-const { buildSchema } = require("graphql");
-
-const AuthSchema = require("./auth");
-const EventSchema = require("./event");
-const BookingSchema = require("./booking");
+import * as AuthSchema from "./auth";
+import * as EventSchema from "./event";
+import * as BookingSchema from "./booking";
 
 const schemas = [AuthSchema, EventSchema, BookingSchema];
 
-const rootSchema = `
+export const rootSchema = `
 ${schemas.map(s => s.typeDef).join("\n")}
 ${schemas.map(s => s.inputDef).join("\n")}
 
@@ -23,5 +21,3 @@ schema {
   mutation: RootMutation
 }
 `;
-
-module.exports = buildSchema(rootSchema);

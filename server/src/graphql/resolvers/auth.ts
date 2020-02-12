@@ -1,9 +1,14 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../../models/user");
+import * as bcrypt from "bcryptjs";
+import * as jwt from "jsonwebtoken";
+import User from "../../models/user";
 
-module.exports = {
-  createUser: async ({ userInput }) => {
+interface UserInputType {
+  email: string;
+  password: string;
+}
+
+export const resolvers = {
+  createUser: async ({ userInput }: { userInput: UserInputType }) => {
     try {
       const existingUser = await User.findOne({ email: userInput.email });
       if (existingUser) throw new Error("User already exists.");
@@ -16,12 +21,12 @@ module.exports = {
       });
 
       const result = await user.save();
-      return { ...result._doc, _id: user.id, password: "***" };
+      return { ...result.toObject(), _id: user.id, password: "***" };
     } catch (err) {
-      return console.log(err);
+      throw new Error(err);
     }
   },
-  login: async ({ userInput }) => {
+  login: async ({ userInput }: { userInput: UserInputType }) => {
     const user = await User.findOne({ email: userInput.email });
     if (!user) throw new Error("Invalid email.");
 
@@ -29,11 +34,9 @@ module.exports = {
     if (!isCorrect) throw new Error("Invalid password.");
 
     const expiresIn = 60;
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.PRIVATE_KEY,
-      { expiresIn: `${expiresIn}m` }
-    );
+    const token = jwt.sign({ userId: user.id }, process.env.PRIVATE_KEY!, {
+      expiresIn: `${expiresIn}m`
+    });
 
     return {
       userId: user.id,

@@ -1,23 +1,23 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const isAuth = require("./middleware/is-auth");
+import * as express from "express";
+import * as mongoose from "mongoose";
+import isAuth from "./middleware/is-auth";
 
-const graphQlHttp = require("express-graphql");
-const graphQlSchema = require("./graphql/schema/index");
-const graphQlResolvers = require("./graphql/resolvers/index");
+import { buildSchema } from "graphql";
+import * as graphQlHttp from "express-graphql";
+import * as graphQlSchema from "./graphql/schema/index";
+import * as graphQlResolvers from "./graphql/resolvers/index";
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(isAuth);
 
 app.use(
   "/graphql",
   graphQlHttp({
     graphiql: true,
-    schema: graphQlSchema,
-    rootValue: graphQlResolvers
+    schema: buildSchema(graphQlSchema.rootSchema),
+    rootValue: graphQlResolvers.rootResolver
   })
 );
 
@@ -35,7 +35,7 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB Atlas");
     app.listen(process.env.PORT, () =>
-      console.log(`Started Server at Port ${process.env.PORT}`)
+      console.log(`Started Server at http://localhost:${process.env.PORT}`)
     );
   })
   .catch(err => console.log(err));

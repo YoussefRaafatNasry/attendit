@@ -1,4 +1,4 @@
-const typeDef = `
+export const typeDef = `
 type Booking {
     _id: ID!
     event: Event!
@@ -7,20 +7,13 @@ type Booking {
     updatedAt: String!
 }`;
 
-const inputDef = ``;
+export const inputDef = ``;
 
-const queries = `
+export const queries = `
 bookings: [Booking!]!
 `;
 
-const mutations = `
+export const mutations = `
 bookEvent(eventId: ID!): Booking!
 cancelBooking(bookingId: ID!): Event!
 `;
-
-module.exports = {
-  typeDef,
-  inputDef,
-  queries,
-  mutations
-};

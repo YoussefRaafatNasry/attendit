@@ -1,17 +1,28 @@
-const Event = require("../../models/event");
-const User = require("../../models/user");
-const { transformEvent } = require("./merge");
+import Event from "../../models/event";
+import User from "../../models/user";
+import { transformEvent } from "./merge";
+import { Request } from "express";
 
-module.exports = {
+interface EventInputType {
+  title: string;
+  description: string;
+  price: number;
+  date: string;
+}
+
+export const resolvers = {
   events: async () => {
     try {
       const result = await Event.find();
       return result.map(transformEvent);
     } catch (err) {
-      return console.log(err);
+      throw new Error(err);
     }
   },
-  createEvent: async ({ eventInput }, req) => {
+  createEvent: async (
+    { eventInput }: { eventInput: EventInputType },
+    req: Request
+  ) => {
     if (!req.isAuth) throw new Error("Unauthenticated request.");
 
     try {
@@ -23,14 +34,14 @@ module.exports = {
         creator: req.userId
       });
 
-      const creator = await User.findById(req.userId);
-      creator.createdEvents.push(event);
+      const creator = (await User.findById(req.userId))!;
+      creator.createdEvents.push(event.id);
       await creator.save();
 
       const result = await event.save();
       return transformEvent(result);
     } catch (err) {
-      return console.log(err);
+      throw new Error(err);
     }
   }
 };
