@@ -1,8 +1,7 @@
 import * as mongoose from "mongoose";
 import { ApolloServer } from "apollo-server";
 import { authenticate } from "./middleware/auth";
-import typeDefs from "./graphql/schema";
-import resolvers from "./graphql/resolvers";
+import { typeDefs, resolvers } from "./graphql/schema";
 
 (async () => {
   try {

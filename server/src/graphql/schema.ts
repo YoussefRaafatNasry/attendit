@@ -1,50 +1,11 @@
-import { gql } from "apollo-server";
+import * as root from "./root";
+import * as scalar from "./scalar";
+import * as auth from "./auth";
+import * as user from "./user";
+import * as event from "./event";
+import * as booking from "./booking";
 
-const typeDefs = gql`
-  scalar DateTime
+const schemas = [root, scalar, auth, user, event, booking];
 
-  type AuthData {
-    userId: ID!
-    token: String!
-    expiresIn: Int!
-  }
-
-  type User {
-    _id: ID!
-    email: String!
-    password: String
-    createdEvents: [Event!]
-  }
-
-  type Event {
-    _id: ID!
-    title: String!
-    description: String
-    price: Float!
-    date: DateTime!
-    creator: User!
-  }
-
-  type Booking {
-    _id: ID!
-    event: Event!
-    user: User!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-  }
-
-  type Query {
-    login(email: String!, password: String!): AuthData
-    events: [Event!]!
-    bookings: [Booking!]!
-  }
-
-  type Mutation {
-    createUser(email: String!, password: String!): User
-    createEvent(title: String!, description: String, price: Float!, date: DateTime!): Event
-    bookEvent(eventId: ID!): Booking!
-    cancelBooking(bookingId: ID!): Event!
-  }
-`;
-
-export default typeDefs;
+export const typeDefs = schemas.map(s => s.typeDef);
+export const resolvers = schemas.map(s => s.resolvers);
