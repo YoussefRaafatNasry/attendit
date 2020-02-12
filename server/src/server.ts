@@ -1,41 +1,42 @@
-import * as express from "express";
 import * as mongoose from "mongoose";
-import isAuth from "./middleware/is-auth";
+import { ApolloServer } from "apollo-server";
+import { authenticate } from "./middleware/auth";
+import typeDefs from "./graphql/schema";
+import resolvers from "./graphql/resolvers";
 
-import { buildSchema } from "graphql";
-import * as graphQlHttp from "express-graphql";
-import * as graphQlSchema from "./graphql/schema/index";
-import * as graphQlResolvers from "./graphql/resolvers/index";
+(async () => {
+  try {
+    // MongoDB //
 
-const app = express();
-
-app.use(express.json());
-app.use(isAuth);
-
-app.use(
-  "/graphql",
-  graphQlHttp({
-    graphiql: true,
-    schema: buildSchema(graphQlSchema.rootSchema),
-    rootValue: graphQlResolvers.rootResolver
-  })
-);
-
-mongoose
-  .connect(
-    "mongodb+srv://" +
+    const uri =
+      "mongodb+srv://" +
       `${process.env.MONGO_USER}:${process.env.MONGO_PASS}` +
       `@${process.env.MONGO_CLUSTER_ID}.mongodb.net/${process.env.MONGO_DB_NAME}` +
-      "?retryWrites=true&w=majority",
-    {
+      "?retryWrites=true&w=majority";
+
+    const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true
-    }
-  )
-  .then(() => {
-    console.log("Connected to MongoDB Atlas");
-    app.listen(process.env.PORT, () =>
-      console.log(`Started Server at http://localhost:${process.env.PORT}`)
-    );
-  })
-  .catch(err => console.log(err));
+    };
+
+    const mongoInfo = await mongoose.connect(uri, options);
+    console.log(`> Connected to MongoDB Atlas : ${mongoInfo.connection.name}`);
+
+    // Apollo Server //
+
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      context: ({ req }) => {
+        const header = req.headers.authorization || "";
+        const meta = authenticate(header);
+        return { userId: process.env.AUTH_USER_ID || meta?.userId };
+      }
+    });
+
+    const serverInfo = await server.listen({ port: process.env.PORT });
+    console.log(`> Server ready at ${serverInfo.url}`);
+  } catch (e) {
+    console.log(e);
+  }
+})();

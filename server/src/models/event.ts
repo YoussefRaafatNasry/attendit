@@ -2,7 +2,7 @@ import { Document, model, Schema } from "mongoose";
 
 export interface IEvent extends Document {
   title: string;
-  description: string;
+  description?: string;
   price: number;
   date: string;
   creator: Schema.Types.ObjectId;
@@ -15,8 +15,7 @@ const schema = new Schema({
     required: true
   },
   description: {
-    type: Schema.Types.String,
-    required: true
+    type: Schema.Types.String
   },
   price: {
     type: Schema.Types.Number,
