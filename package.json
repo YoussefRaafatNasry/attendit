@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "name": "attendit",
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "client": "yarn workspace @attendit/client start",
+        "server": "yarn workspace @attendit/server start",
+        "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    },
+    "devDependencies": {
+        "concurrently": "^5.1.0",
+        "typescript": "^3.7.5"
+    }
+}

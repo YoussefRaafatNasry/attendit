@@ -1,8 +1,6 @@
 {
-  "name": "attend-it",
+  "name": "@attendit/server",
   "version": "1.0.0",
-  "description": "Just a demo to learn Full Stack Development.",
-  "author": "YoussefRaafatNasry",
   "main": "src/server.ts",
   "scripts": {
     "start": "ts-node-dev -r dotenv/config --respawn --transpileOnly --no-notify .",
@@ -28,7 +26,6 @@
     "husky": "^4.2.1",
     "sync-dotenv": "^2.4.0",
     "ts-node-dev": "^1.0.0-pre.44",
-    "tslint": "^6.0.0",
-    "typescript": "^3.7.5"
+    "tslint": "^6.0.0"
   }
 }
