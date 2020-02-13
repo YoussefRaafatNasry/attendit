@@ -1,0 +1,41 @@
+.auth-form {
+  width: 34%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 64px;
+
+  &__header {
+    color: $gray;
+    text-align: center;
+  }
+
+  &__input {
+    width: 100%;
+    margin: 12px;
+    padding: 16px;
+    outline-color: black;
+  }
+
+  &__buttons {
+    display: flex;
+
+    button {
+      background: transparent;
+      border: none;
+      outline: none;
+      margin: 16px;
+      padding: 8px;
+      text-transform: uppercase;
+      color: $gray;
+      transition: color 0.5s;
+      cursor: pointer;
+
+      &:active,
+      &:hover {
+        color: black;
+        font-weight: bold;
+      }
+    }
+  }
+}
