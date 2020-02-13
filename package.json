@@ -8,10 +8,15 @@
     "scripts": {
         "client": "yarn workspace @attendit/client start",
         "server": "yarn workspace @attendit/server start",
-        "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+        "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+        "sync-env-client": "sync-dotenv --env client/.env --sample client/.env.example",
+        "sync-env-server": "sync-dotenv --env server/.env --sample server/.env.example",
+        "sync-env": "yarn sync-env-client && yarn sync-env-server"
     },
     "devDependencies": {
         "concurrently": "^5.1.0",
+        "husky": "^4.2.3",
+        "sync-dotenv": "^2.4.0",
         "typescript": "^3.7.5"
     }
 }

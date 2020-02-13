@@ -3,13 +3,7 @@
   "version": "1.0.0",
   "main": "src/server.ts",
   "scripts": {
-    "start": "ts-node-dev -r dotenv/config --respawn --transpileOnly --no-notify .",
-    "env": "sync-dotenv"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run env"
-    }
+    "start": "ts-node-dev -r dotenv/config --respawn --transpileOnly --no-notify ."
   },
   "dependencies": {
     "apollo-server": "^2.10.0",
@@ -23,8 +17,6 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^8.3.7",
     "@types/mongoose": "^5.7.1",
-    "husky": "^4.2.1",
-    "sync-dotenv": "^2.4.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "tslint": "^6.0.0"
   }
