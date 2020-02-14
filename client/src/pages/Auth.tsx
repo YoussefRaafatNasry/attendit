@@ -1,6 +1,61 @@
-import React, { Component } from "react";
+import React, { Component, MouseEvent } from "react";
+
+import { request } from "../util/GraphQlRequest";
+import AuthContext from "../context/AuthContext";
 
 export default class AuthPage extends Component {
+  static contextType = AuthContext;
+  public context!: React.ContextType<typeof AuthContext>;
+
+  private emailRef: React.RefObject<HTMLInputElement> = React.createRef();
+  private passwordRef: React.RefObject<HTMLInputElement> = React.createRef();
+
+  get email() {
+    return this.emailRef.current?.value;
+  }
+
+  get password() {
+    return this.passwordRef.current?.value;
+  }
+
+  loginHandler = (event: MouseEvent) => {
+    event.preventDefault();
+
+    const query = `
+      query {
+        login(email: "${this.email}", password: "${this.password}") {
+          token
+        }
+      }
+    `;
+
+    this.authenticate(query);
+  };
+
+  registerHandler = (event: MouseEvent) => {
+    event.preventDefault();
+
+    const query = `
+      mutation {
+        register(email: "${this.email}", password: "${this.password}") {
+          _id
+          email
+        }
+      }
+    `;
+
+    this.authenticate(query);
+  };
+
+  authenticate = (query: string) => {
+    // TODO: Validate Email and password
+    request(query).then(res => {
+      // TODO: Handle register case
+      const token = res.data.login?.token;
+      this.context.login(token);
+    });
+  };
+
   render() {
     return (
       <form className="auth-form">
@@ -14,17 +69,19 @@ export default class AuthPage extends Component {
           id="email"
           type="email"
           placeholder="Email"
+          ref={this.emailRef}
         />
         <input
           className="auth-form__input"
           id="password"
           type="password"
           placeholder="Password"
+          ref={this.passwordRef}
         />
 
         <div className="auth-form__buttons">
-          <button>Login</button>
-          <button>Register</button>
+          <button onClick={this.loginHandler}>Login</button>
+          <button onClick={this.registerHandler}>Register</button>
         </div>
       </form>
     );

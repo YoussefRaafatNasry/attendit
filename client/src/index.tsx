@@ -7,24 +7,49 @@ import EventsPage from "./pages/Events";
 import BookingsPage from "./pages/Bookings";
 import { NavBar } from "./components/Navbar";
 
+import AuthContext, { IAuthContext } from "./context/AuthContext";
+
 import "./styles/main.scss";
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <React.Fragment>
-        <NavBar />
-        <main>
-          <Switch>
-            <Redirect from="/" to="/auth" exact />
-            <Route path="/auth" component={AuthPage} />
-            <Route path="/events" component={EventsPage} />
-            <Route path="/bookings" component={BookingsPage} />
-          </Switch>
-        </main>
-      </React.Fragment>
-    </BrowserRouter>
-  );
-};
+interface IState {
+  token: string | null;
+}
+
+class App extends React.Component<{}, IState> {
+  public state: IState = {
+    token: null
+  };
+
+  get contextValue(): IAuthContext {
+    return {
+      token: this.state.token,
+      login: token => this.setState({ token }),
+      logout: () => this.setState({ token: null })
+    };
+  }
+
+  render() {
+    const isAuth = this.state.token;
+    return (
+      <BrowserRouter>
+        <AuthContext.Provider value={this.contextValue}>
+          <NavBar />
+          <main>
+            <Switch>
+              <Route exact path="/" component={BookingsPage}>
+                <Redirect to={isAuth ? "/events" : "/auth"} />
+              </Route>
+              <Route path="/auth" component={AuthPage}>
+                {isAuth && <Redirect to="/events" />}
+              </Route>
+              <Route path="/events" component={EventsPage} />
+              {isAuth && <Route path="/bookings" component={BookingsPage} />}
+            </Switch>
+          </main>
+        </AuthContext.Provider>
+      </BrowserRouter>
+    );
+  }
+}
 
 ReactDOM.render(<App />, document.getElementById("root"));
