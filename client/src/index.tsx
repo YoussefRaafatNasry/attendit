@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
-import AuthPage from "./pages/Auth";
-import EventsPage from "./pages/Events";
-import BookingsPage from "./pages/Bookings";
+import AuthPage from "./pages/AuthPage";
+import EventsPage from "./pages/EventsPage";
+import BookingsPage from "./pages/BookingsPage";
 import { NavBar } from "./components/Navbar";
 
 import AuthContext, { IAuthContext } from "./context/AuthContext";
