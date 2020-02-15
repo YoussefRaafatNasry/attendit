@@ -13,36 +13,31 @@ import AuthContext, { IAuthContext } from "./context/AuthContext";
 
 import "./styles/main.scss";
 
-interface IState {
-  token: string | null;
-}
-
-class App extends React.Component<{}, IState> {
-  public state: IState = {
+class App extends React.Component<{}, IAuthContext> {
+  public state: IAuthContext = {
     token: null
   };
 
-  get contextValue(): IAuthContext {
-    return {
-      token: this.state.token,
-      login: token => this.setState({ token }),
-      logout: () => this.setState({ token: null })
-    };
-  }
+  authenticateHandler = (token: string) => this.setState({ token });
+  logoutHandler = () => this.setState({ token: null });
 
   render() {
     const isAuth = this.state.token;
     return (
       <BrowserRouter>
-        <AuthContext.Provider value={this.contextValue}>
-          <NavBar />
+        <AuthContext.Provider value={this.state}>
+          <NavBar logoutHandler={this.logoutHandler} />
           <main>
             <Switch>
               <Route exact path="/" component={BookingsPage}>
                 <Redirect to={isAuth ? "/events" : "/auth"} />
               </Route>
-              <Route path="/auth" component={AuthPage}>
-                {isAuth && <Redirect to="/events" />}
+              <Route path="/auth">
+                {isAuth ? (
+                  <Redirect to="/events" />
+                ) : (
+                  <AuthPage authenticateHandler={this.authenticateHandler} />
+                )}
               </Route>
               <Route path="/events" component={EventsPage} />
               {isAuth && <Route path="/bookings" component={BookingsPage} />}

@@ -1,12 +1,12 @@
 import React, { Component, MouseEvent } from "react";
 
 import { request } from "../util/GraphQlRequest";
-import AuthContext from "../context/AuthContext";
 
-export default class AuthPage extends Component {
-  static contextType = AuthContext;
-  public context!: React.ContextType<typeof AuthContext>;
+interface IProps {
+  authenticateHandler: (token: string) => void
+}
 
+export default class AuthPage extends Component<IProps> {
   private emailRef: React.RefObject<HTMLInputElement> = React.createRef();
   private passwordRef: React.RefObject<HTMLInputElement> = React.createRef();
 
@@ -52,7 +52,7 @@ export default class AuthPage extends Component {
     request(query).then(res => {
       // TODO: Handle register case
       const token = res.data.login?.token;
-      this.context.login(token);
+      this.props.authenticateHandler(token);
     });
   };
 
