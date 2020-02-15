@@ -5,7 +5,9 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import EventsPage from "./pages/EventsPage";
 import BookingsPage from "./pages/BookingsPage";
+
 import { NavBar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
 
 import AuthContext, { IAuthContext } from "./context/AuthContext";
 
@@ -46,6 +48,7 @@ class App extends React.Component<{}, IState> {
               {isAuth && <Route path="/bookings" component={BookingsPage} />}
             </Switch>
           </main>
+          <Footer />
         </AuthContext.Provider>
       </BrowserRouter>
     );
